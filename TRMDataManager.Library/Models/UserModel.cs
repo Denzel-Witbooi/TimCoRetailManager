@@ -8,6 +8,9 @@ namespace TRMDataManager.Library.Models
 {
     public class UserModel
     {
+        /// <summary>
+        /// PK for a user from the User Table
+        /// </summary>
         public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
