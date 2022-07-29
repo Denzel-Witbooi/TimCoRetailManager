@@ -82,6 +82,7 @@ namespace TRMDataManager.Controllers
                 var userStore = new UserStore<ApplicationUser>(context);
                 var userManager = new UserManager<ApplicationUser>(userStore);
 
+                // TODO ERROR HANDLING / DONT LEAVE THE ROLE BOX EMPTY
                 userManager.AddToRole(pairing.UserId, pairing.RoleName);
             }
         }
