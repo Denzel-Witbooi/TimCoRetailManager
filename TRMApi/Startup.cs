@@ -61,7 +61,7 @@ namespace TRMApi
 					{
 						ValidateIssuerSigningKey = true,
 						IssuerSigningKey = new SymmetricSecurityKey(
-							   Encoding.UTF8.GetBytes("MySecretKeyIsSecretSoDoNotTell")),
+							   Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Secrets:SecurityKey"))),
 						ValidateIssuer = false,
 						ValidateAudience = false,
 						ValidateLifetime = true,
