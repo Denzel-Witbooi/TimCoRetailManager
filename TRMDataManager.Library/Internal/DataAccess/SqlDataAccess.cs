@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace TRMDataManager.Library.Internal.DataAccess
 {
-    internal class SqlDataAccess : IDisposable
+    public class SqlDataAccess : IDisposable, ISqlDataAccess
     {
         private readonly IConfiguration _config;
         public SqlDataAccess(IConfiguration config)
         {
-           _config = config;
+            _config = config;
         }
 
         public string GetConnectionString(string name)
@@ -29,7 +29,7 @@ namespace TRMDataManager.Library.Internal.DataAccess
             string connectionString = GetConnectionString(connectionStringName);
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
-                List<T> rows = connection.Query<T>(storedProcedure, parameters, 
+                List<T> rows = connection.Query<T>(storedProcedure, parameters,
                     commandType: CommandType.StoredProcedure).ToList();
                 return rows;
             }
@@ -40,15 +40,15 @@ namespace TRMDataManager.Library.Internal.DataAccess
             string connectionString = GetConnectionString(connectionStringName);
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
-               connection.Execute(storedProcedure, parameters,
-                    commandType: CommandType.StoredProcedure);
+                connection.Execute(storedProcedure, parameters,
+                     commandType: CommandType.StoredProcedure);
             }
         }
 
 
         private IDbConnection _connection;
         private IDbTransaction _transaction;
-     
+
         public void StartTransaction(string connectionStringName)
         {
             string connectionString = GetConnectionString(connectionStringName);
@@ -62,15 +62,15 @@ namespace TRMDataManager.Library.Internal.DataAccess
 
         public void SaveDataInTransaction<T>(string storedProcedure, T parameters)
         {
-           _connection.Execute(storedProcedure, parameters,
-                     commandType: CommandType.StoredProcedure, transaction: _transaction);
+            _connection.Execute(storedProcedure, parameters,
+                      commandType: CommandType.StoredProcedure, transaction: _transaction);
         }
 
         public List<T> LoadDataInTransaction<T, U>(string storedProcedure, U parameters)
         {
-                List<T> rows = _connection.Query<T>(storedProcedure, parameters,
-                    commandType: CommandType.StoredProcedure, transaction: _transaction).ToList();
-                return rows;
+            List<T> rows = _connection.Query<T>(storedProcedure, parameters,
+                commandType: CommandType.StoredProcedure, transaction: _transaction).ToList();
+            return rows;
         }
 
         private bool isClosed = false;
@@ -103,17 +103,10 @@ namespace TRMDataManager.Library.Internal.DataAccess
                 catch
                 {
                     // TODO - Log this issue
-                } 
+                }
             }
-
             _transaction = null;
             _connection = null;
         }
-
-        // Open connect/start transaction method
-        // Load using the transaction
-        // Save using the transaction
-        // Close connection / stop transaction method
-        // Implement Dispose
     }
 }
